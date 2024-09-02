@@ -1,39 +1,30 @@
-
 pipeline {
-   tools {
-        maven 'Maven3'
-    }
     agent any
+
     environment {
-        registry = "150878085644.dkr.ecr.ap-south-1.amazonaws.com/test"
+        registry = "768470326209.dkr.ecr.ap-south-1.amazonaws.com/demo"
     }
    
     stages {
-        stage('Cloning Git') {
+        stage('Chekout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '', url: 'https://github.com/yasminjeelani/EKS-CICD.git']]])     
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [[url: 'https://github.com/srinivasandhatchinamoorthy/EKS-CICDPRO/']]])     
             }
         }
-      stage ('Build') {
+
+      stage ("Build image") {
           steps {
-            sh 'mvn clean install'           
-            }
+              script {
+                  docker.build.registry
+              }
+         }
       }
-    // Building Docker images
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry 
-        }
-      }
-    }
-   
-    // Uploading Docker images into AWS ECR
-    stage('Pushing to ECR') {
+    
+    stage("docker push") {{
      steps{  
          script {
-                sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 150878085644.dkr.ecr.ap-south-1.amazonaws.com/test'
-                sh 'docker push 150878085644.dkr.ecr.ap-south-1.amazonaws.com/test'
+                sh 'aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 768470326209.dkr.ecr.ap-south-1.amazonaws.com/demo'
+                sh 'docker push 768470326209.dkr.ecr.ap-south-1.amazonaws.com/demo'
          }
         }
       }
@@ -48,6 +39,6 @@ pipeline {
        }
     }
 }
-}
+ }
 
 

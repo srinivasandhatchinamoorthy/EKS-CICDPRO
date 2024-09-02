@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Chekout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [[url: 'https://github.com/srinivasandhatchinamoorthy/EKS-CICDPRO/']]])     
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [[url: 'https://github.com/srinivasandhatchinamoorthy/EKS-CICDPRO.git/']]])     
             }
         }
 
